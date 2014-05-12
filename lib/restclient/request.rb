@@ -3,6 +3,7 @@ require 'mime/types'
 require 'cgi'
 require 'netrc'
 require 'set'
+require 'httpi'
 
 module RestClient
   # This class is used internally by RestClient to send the request, but you can also
@@ -173,7 +174,12 @@ module RestClient
 
     def execute & block
       uri = parse_url_with_auth(url)
-      transmit uri, net_http_request_class(method).new(uri.request_uri, processed_headers), payload, & block
+      request = HTTPI::Request.new
+      request.url = uri
+      request.headers = processed_headers
+      request.body = payload
+      HTTPI.request(method, request)
+      # transmit uri, net_http_request_class(method).new(uri.request_uri, processed_headers), payload, & block
     ensure
       payload.close if payload
     end
