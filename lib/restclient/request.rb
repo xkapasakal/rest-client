@@ -174,14 +174,21 @@ module RestClient
 
     def execute & block
       uri = parse_url_with_auth(url)
+      p uri
+      transmit_httpi(uri)
+      # transmit uri, net_http_request_class(method).new(uri.request_uri, processed_headers), payload, & block
+    ensure
+      payload.close if payload
+    end
+
+    def transmit_httpi(uri)
       request = HTTPI::Request.new
       request.url = uri
       request.headers = processed_headers
       request.body = payload
+      request.proxy = 'http://localhost:8888'
+      request.auth.ntlm('isoftintl2', 'dr2Ker0l')
       HTTPI.request(method, request)
-      # transmit uri, net_http_request_class(method).new(uri.request_uri, processed_headers), payload, & block
-    ensure
-      payload.close if payload
     end
 
     # SSL-related options
