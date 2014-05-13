@@ -24,7 +24,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency('mime-types', '~> 2.0')
   s.add_dependency('netrc', '~> 0.7')
-  s.add_dependency('httpi', '~> 2.1.0')
+  s.add_dependency('rubyntlm', '~> 0.4.0')
+  s.add_dependency('excon', '~> 0.33.0')
 
   s.required_ruby_version = '>= 1.9.2'
 end

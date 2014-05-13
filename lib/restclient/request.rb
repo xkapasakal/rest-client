@@ -3,7 +3,8 @@ require 'mime/types'
 require 'cgi'
 require 'netrc'
 require 'set'
-require 'httpi'
+require 'rubyntlm'
+require 'excon'
 
 module RestClient
   # This class is used internally by RestClient to send the request, but you can also
@@ -180,16 +181,32 @@ module RestClient
       payload.close if payload
     end
 
-    def transmit_httpi(uri, & block)
-      request = HTTPI::Request.new
-      request.url = uri
-      request.headers = processed_headers
-      request.body = payload
-      request.proxy = 'http://localhost:8888'
-      request.auth.ntlm('isoftintl2', 'dr2Ker0l')
-      res = HTTPI.request(method, request)
+    def transmit_custom(uri, & block)
+
+      connection = Excon.new(uri, persistent: true, proxy: 'http://localhost:8888')
+      ntlm_auth(connection)
+      res = connection.request(method: method, body: payload, headers: headers)
+      # request = HTTPI::Request.new
+      # request.url = uri
+      # request.headers = processed_headers
+      # request.body = payload
+      # request.proxy = 'http://localhost:8888'
+      # request.auth.ntlm('isoftintl2', 'dr2Ker0l')
+      # res = HTTPI.request(method, request)
       Response.create(res.body, res, args)
       # process_result response, & block
+    end
+
+    def ntlm_auth(connection)
+      t1 = Net::NTLM::Message::Type1.new
+      response = connection.get(headers: {'Authorization' => "NTLM #{t1.encode64}"})
+
+      if response.headers['WWW-Authenticate'] =~ /(NTLM|Negotiate) (.+)/
+        msg = $2
+        t2 = Net::NTLM::Message.decode64(msg)
+        t3 = t2.response({user: 'isoftintl2', password: 'dr2Ker0l'}, {ntlmv2: true})
+        connection.get(headers: {'Authorization' => "NTLM #{t3.encode64}"})
+      end
     end
 
     # SSL-related options
