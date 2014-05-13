@@ -193,7 +193,7 @@ module RestClient
       # request.auth.ntlm('isoftintl2', 'dr2Ker0l')
       # res = HTTPI.request(method, request)
       Response.create(res.body, res, args)
-      process_result response, & block
+      # process_result response, & block
     end
 
     def ntlm_auth(connection)
