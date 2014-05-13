@@ -185,8 +185,8 @@ module RestClient
       request.url = uri
       request.headers = processed_headers
       request.body = payload
-      # request.proxy = 'http://localhost:8888'
-      # request.auth.ntlm('isoftintl2', 'dr2Ker0l')
+      request.proxy = 'http://localhost:8888'
+      request.auth.ntlm('isoftintl2', 'dr2Ker0l')
       response = HTTPI.request(method, request)
       response.body
       # process_result response, & block
