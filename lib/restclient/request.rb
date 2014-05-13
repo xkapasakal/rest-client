@@ -181,14 +181,15 @@ module RestClient
     end
 
     def transmit_httpi(uri, & block)
+      HTTPI.adapter = :net_http_persistent
       request = HTTPI::Request.new
       request.url = uri
       request.headers = processed_headers
       request.body = payload
       request.proxy = 'http://localhost:8888'
       request.auth.ntlm('isoftintl2', 'dr2Ker0l')
-      response = HTTPI.request(method, request)
-      response.body
+      res = HTTPI.request(method, request)
+      Response.create(res.body, res, args)
       # process_result response, & block
     end
 

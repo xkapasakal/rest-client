@@ -25,6 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency('mime-types', '~> 2.0')
   s.add_dependency('netrc', '~> 0.7')
   s.add_dependency('httpi', '~> 2.1.0')
+  s.add_dependency('net-http-persistent', '~> 2.9.4')
 
   s.required_ruby_version = '>= 1.9.2'
 end
