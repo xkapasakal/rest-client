@@ -181,7 +181,6 @@ module RestClient
     end
 
     def transmit_httpi(uri, & block)
-      HTTPI.adapter = :net_http_persistent
       request = HTTPI::Request.new
       request.url = uri
       request.headers = processed_headers
