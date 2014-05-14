@@ -184,7 +184,7 @@ module RestClient
     def transmit_custom(uri, & block)
       connection = Excon.new(uri.to_s, persistent: true, proxy: 'http://localhost:8888')
       ntlm_auth(connection)
-      res = connection.request(method: method, body: payload, headers: headers)
+      res = connection.request(method: method, body: payload, headers: processed_headers)
       # request = HTTPI::Request.new
       # request.url = uri
       # request.headers = processed_headers
